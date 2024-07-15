@@ -9,6 +9,7 @@ build:
     - "torch==2.1.0"
     - "transformers==4.36.2"
     - "einops==0.7.0"
+    - "numpy==1.24.4"
 
   run:
     - pip install flash-attn --no-build-isolation

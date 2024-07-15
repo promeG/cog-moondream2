@@ -12,9 +12,9 @@ from threading import Thread
 from transformers import TextIteratorStreamer, AutoTokenizer, AutoModelForCausalLM
 
 MODEL_NAME = "vikhyatk/moondream2"
-REVISION = "2024-03-13"
+REVISION = "2024-05-20"
 MODEL_CACHE = "checkpoints"
-MODEL_URL = "https://weights.replicate.delivery/default/vikhyatk/moondream2-24-03-13.tar"
+# MODEL_URL = "https://weights.replicate.delivery/default/vikhyatk/moondream2-24-03-13.tar"
 
 def download_weights(url, dest):
     start = time.time()
@@ -29,7 +29,9 @@ class Predictor(BasePredictor):
         start = time.time()
         print("Loading model weights...")
         if not os.path.exists(MODEL_CACHE):
-            download_weights(MODEL_URL, MODEL_CACHE)
+            print("NO MODEL WEIGHTS!")
+            exit(-1)
+            # download_weights(MODEL_URL, MODEL_CACHE)
         self.tokenizer = AutoTokenizer.from_pretrained(
             MODEL_NAME,
             revision=REVISION,
@@ -66,6 +68,8 @@ class Predictor(BasePredictor):
         )
         thread.start()
 
+        result_str = ''
         for new_text in streamer:
             clean_text = re.sub("<$|<END$", "", new_text)
-            yield clean_text
+            result_str = result_str + clean_text
+        return result_str
